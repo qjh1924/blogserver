@@ -1,0 +1,13 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# target
+/target
+
+#test
+/src/test
+
+/.idea
+/src/main/java/cn/qiujianhui/doctorfruit
+/src/main/resources/ssl
+/src/main/resources/mapper/doctorfruit
+/src/main/resources/application.yml

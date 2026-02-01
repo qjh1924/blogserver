@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.qiujianhui.blog.mapper.ArticleMapper">
+    <select id="getWebsiteCounts" resultType="cn.qiujianhui.blog.entity.WebsiteCount">
+        select
+            COUNT(*) as articleCnt,
+            SUM(view_count) as viewCnt,
+            (SELECT COUNT(*) FROM blog_message_board) as commentCnt
+        FROM blog_article
+    </select>
+
+    <select id="getLatestArticles" parameterType="java.lang.Integer" resultType="cn.qiujianhui.blog.entity.Article">
+        select
+            id,
+            type_id as type,
+            title,
+            article_content as content,
+            introduce,
+            FROM_UNIXTIME(addTime,'%Y-%m-%d %H:%i:%s' ) as addTime,
+            view_count as viewCnt,
+            tags
+        from blog_article
+        order by addTime desc
+        limit #{pageId}, 3
+    </select>
+
+    <select id="getListByTypeId" parameterType="java.lang.String" resultType="cn.qiujianhui.blog.entity.Article">
+        select
+            a.id,
+            type_id as type,
+            t.typeName as typeName,
+            title,
+            article_content as content,
+            introduce,
+            FROM_UNIXTIME(addTime,'%Y-%m-%d %H:%i:%s' ) as addTime,
+            view_count as viewCnt,
+            tags
+        from blog_article a
+        left join blog_type t ON a.type_id = t.id
+        where type_id = #{typeId}
+    </select>
+
+    <update id="increaseViewCnt" parameterType="java.lang.String">
+        update blog_article set view_count = view_count + 1 where id = #{articleId}
+    </update>
+
+    <select id="getArticleById" parameterType="java.lang.String" resultType="cn.qiujianhui.blog.entity.Article">
+        select
+            a.id,
+            type_id as type,
+            t.typeName as typeName,
+            title,
+            article_content as content,
+            introduce,
+            FROM_UNIXTIME(addTime,'%Y-%m-%d %H:%i:%s' ) as addTime,
+            view_count as viewCnt,
+            tags
+        from blog_article a
+        left join blog_type t ON a.type_id = t.id
+        where a.id = #{articleId}
+    </select>
+
+    <select id="getMessagesById" parameterType="java.lang.String" resultType="cn.qiujianhui.blog.entity.Message">
+        select
+            id,
+            message,
+            nickname,
+            addTime,
+            article_id as articleId,
+            if_display as isValid,
+            email
+        from blog_message_board
+        where article_id = #{articleId} and if_display = '1'
+    </select>
+
+    <select id="getTypeInfo" parameterType="java.lang.String" resultType="cn.qiujianhui.blog.entity.TypeInfo">
+        select
+            id,
+            typeName as type
+        FROM blog_type
+    </select>
+
+    <select id="getArticleList" resultType="cn.qiujianhui.blog.entity.Article">
+        select
+            id,
+            type_id as type,
+            title,
+            article_content as content,
+            introduce,
+            FROM_UNIXTIME(addTime,'%Y-%m-%d %H:%i:%s' ) as addTime,
+            view_count as viewCnt,
+            tags
+        from blog_article
+    </select>
+</mapper>
