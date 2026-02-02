@@ -1,9 +1,9 @@
 package cn.qiujianhui.blog.mapper;
 
-import cn.qiujianhui.blog.entity.Article;
-import cn.qiujianhui.blog.entity.Message;
-import cn.qiujianhui.blog.entity.TypeInfo;
-import cn.qiujianhui.blog.entity.WebsiteCount;
+import cn.qiujianhui.blog.entity.blog.Article;
+import cn.qiujianhui.blog.entity.blog.Message;
+import cn.qiujianhui.blog.entity.blog.TypeInfo;
+import cn.qiujianhui.blog.entity.blog.WebsiteCount;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;

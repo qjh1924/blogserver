@@ -3,7 +3,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="cn.qiujianhui.blog.mapper.ArticleMapper">
-    <select id="getWebsiteCounts" resultType="cn.qiujianhui.blog.entity.WebsiteCount">
+    <select id="getWebsiteCounts" resultType="cn.qiujianhui.blog.entity.blog.WebsiteCount">
         select
             COUNT(*) as articleCnt,
             SUM(view_count) as viewCnt,
@@ -11,7 +11,7 @@
         FROM blog_article
     </select>
 
-    <select id="getLatestArticles" parameterType="java.lang.Integer" resultType="cn.qiujianhui.blog.entity.Article">
+    <select id="getLatestArticles" parameterType="java.lang.Integer" resultType="cn.qiujianhui.blog.entity.blog.Article">
         select
             id,
             type_id as type,
@@ -26,7 +26,7 @@
         limit #{pageId}, 3
     </select>
 
-    <select id="getListByTypeId" parameterType="java.lang.String" resultType="cn.qiujianhui.blog.entity.Article">
+    <select id="getListByTypeId" parameterType="java.lang.String" resultType="cn.qiujianhui.blog.entity.blog.Article">
         select
             a.id,
             type_id as type,
@@ -46,7 +46,7 @@
         update blog_article set view_count = view_count + 1 where id = #{articleId}
     </update>
 
-    <select id="getArticleById" parameterType="java.lang.String" resultType="cn.qiujianhui.blog.entity.Article">
+    <select id="getArticleById" parameterType="java.lang.String" resultType="cn.qiujianhui.blog.entity.blog.Article">
         select
             a.id,
             type_id as type,
@@ -62,7 +62,7 @@
         where a.id = #{articleId}
     </select>
 
-    <select id="getMessagesById" parameterType="java.lang.String" resultType="cn.qiujianhui.blog.entity.Message">
+    <select id="getMessagesById" parameterType="java.lang.String" resultType="cn.qiujianhui.blog.entity.blog.Message">
         select
             id,
             message,
@@ -75,14 +75,14 @@
         where article_id = #{articleId} and if_display = '1'
     </select>
 
-    <select id="getTypeInfo" parameterType="java.lang.String" resultType="cn.qiujianhui.blog.entity.TypeInfo">
+    <select id="getTypeInfo" parameterType="java.lang.String" resultType="cn.qiujianhui.blog.entity.blog.TypeInfo">
         select
             id,
             typeName as type
         FROM blog_type
     </select>
 
-    <select id="getArticleList" resultType="cn.qiujianhui.blog.entity.Article">
+    <select id="getArticleList" resultType="cn.qiujianhui.blog.entity.blog.Article">
         select
             id,
             type_id as type,
