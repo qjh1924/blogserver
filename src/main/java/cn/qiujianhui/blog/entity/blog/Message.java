@@ -1,4 +1,4 @@
-package cn.qiujianhui.blog.entity;
+package cn.qiujianhui.blog.entity.blog;
 
 import lombok.Data;
 

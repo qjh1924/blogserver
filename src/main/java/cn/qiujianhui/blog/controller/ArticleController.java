@@ -1,9 +1,9 @@
 package cn.qiujianhui.blog.controller;
 
-import cn.qiujianhui.blog.entity.Article;
-import cn.qiujianhui.blog.entity.Message;
-import cn.qiujianhui.blog.entity.TypeInfo;
-import cn.qiujianhui.blog.entity.WebsiteCount;
+import cn.qiujianhui.blog.entity.blog.Article;
+import cn.qiujianhui.blog.entity.blog.Message;
+import cn.qiujianhui.blog.entity.blog.TypeInfo;
+import cn.qiujianhui.blog.entity.blog.WebsiteCount;
 import cn.qiujianhui.blog.mapper.ArticleMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.qiujianhui.blog.mapper.ArticleMapper">
+    <select id="init">
+        CREATE TABLE blog_tweet (
+            id bigint NOT NULL AUTO_INCREMENT,
+            content text,
+            author varchar(30),
+            publish_time datetime,
+            update_time datetime,
+            PRIMARY KEY (id)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+        CREATE TABLE blog_tweet_pic (
+            id bigint NOT NULL AUTO_INCREMENT,
+            tweet_id varchar(20),
+            pic_type char(2),
+            pic_path varchar(100),
+            PRIMARY KEY (id)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+        CREATE TABLE blog_tweet_comment (
+            id bigint NOT NULL AUTO_INCREMENT,
+            tweet_id varchar(20),
+            content varchar(300),
+            pic_path varchar(100),
+            publish_time datetime,
+            PRIMARY KEY (id)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+    </select>
+
+    <select id="queryTweets" parameterType="cn.qiujianhui.blog.entity.tweet.Tweet" resultType="cn.qiujianhui.blog.entity.tweet.Tweet">
+        select
+            id,
+            content,
+            author,
+            publish_time as publishTime,
+            update_time as updateTime
+        from blog_tweet
+        order by publish_time desc
+    </select>
+
+    <select id="queryTweetPicByIds" parameterType="java.util.List" resultType="cn.qiujianhui.blog.entity.tweet.TweetPic">
+        select
+            id,
+            tweet_id as tweetId,
+            pic_type as type,
+            pic_path as picPath,
+        from blog_tweet_pic
+        where tweet_id in
+        <foreach open="(" close=")" separator="," collection="tweetIds" item="item">
+            #{item}
+        </foreach>
+    </select>
+    
+</mapper>
