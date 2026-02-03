@@ -12,10 +12,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/tweet")
@@ -35,12 +33,18 @@ public class TweetController {
             // 查出推文列表
             PageHelper.startPage(tweet.getPageNum(), tweet.getPageSize());
             Page<Tweet> pages = tweetMapper.queryTweets(tweet);
-            if (pages != null && pages.getResult().size() > 0) {
+            if (pages != null && !pages.getResult().isEmpty()) {
 
                 // 查询关联的图片/视频
                 List<String> tweetIds = pages.getResult().stream().map(Tweet::getId).toList();
-                List<TweetPic> tweetPicList = tweetMapper.queryTweetPicByIds(tweetIds);
-                List<TweetComment> tweetCommentList = tweetMapper.queryTweetCommentByIds(tweetIds);
+                Map<String, List<TweetPic>> tweetPicMap = tweetMapper.queryTweetPicByIds(tweetIds);
+                Map<String, List<TweetComment>> tweetCommentMap = tweetMapper.queryTweetCommentByIds(tweetIds);
+
+                // 整理数据
+                pages.getResult().forEach(item -> {
+                    item.setPicList(tweetPicMap.get(item.getId()));
+                    item.setCommentList(tweetCommentMap.get(item.getId()));
+                });
 
                 Result result = Result.success(pages.getResult());
                 setPageParam(result, pages);

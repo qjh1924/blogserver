@@ -8,5 +8,5 @@ public class TweetPic {
     private String tweetId;
     private String type;
     private String picPath;
-    private String order;
+    private String publishTime;
 }

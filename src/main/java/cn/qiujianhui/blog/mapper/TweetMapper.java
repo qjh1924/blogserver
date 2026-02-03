@@ -4,9 +4,11 @@ import cn.qiujianhui.blog.entity.tweet.Tweet;
 import cn.qiujianhui.blog.entity.tweet.TweetComment;
 import cn.qiujianhui.blog.entity.tweet.TweetPic;
 import com.github.pagehelper.Page;
+import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface TweetMapper {
@@ -23,13 +25,15 @@ public interface TweetMapper {
      * @param tweetIds
      * @return
      */
-    List<TweetPic> queryTweetPicByIds(List<String> tweetIds);
+    @MapKey("tweetId")
+    Map<String, List<TweetPic>> queryTweetPicByIds(List<String> tweetIds);
 
     /**
      * 根据推文id查询关联评论
      * @param tweetIds
      * @return
      */
-    List<TweetComment> queryTweetCommentByIds(List<String> tweetIds);
+    @MapKey("tweetId")
+    Map<String, List<TweetComment>> queryTweetCommentByIds(List<String> tweetIds);
 
 }
