@@ -1,12 +1,11 @@
 package cn.qiujianhui.blog.entity.tweet;
 
-import cn.qiujianhui.blog.entity.PageParam;
 import lombok.Data;
 
 import java.util.List;
 
 @Data
-public class Tweet extends PageParam {
+public class Tweet {
     /**
      * 推文id
      */

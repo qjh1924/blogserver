@@ -1,5 +1,6 @@
 package cn.qiujianhui.blog.controller;
 
+import cn.qiujianhui.blog.entity.PageParam;
 import cn.qiujianhui.blog.entity.Result;
 import cn.qiujianhui.blog.entity.tweet.Tweet;
 import cn.qiujianhui.blog.entity.tweet.TweetComment;
@@ -8,12 +9,15 @@ import cn.qiujianhui.blog.mapper.TweetMapper;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/tweet")
@@ -24,21 +28,24 @@ public class TweetController {
 
     /**
      * 分页查询推文
-     * @param tweet 请求参数
+     * @param param 分页参数
      * @return Result 结果数据
      */
     @GetMapping("/queryTweets")
-    Result queryTweets(Tweet tweet) {
+    Result queryTweets(PageParam param) {
         try {
             // 查出推文列表
-            PageHelper.startPage(tweet.getPageNum(), tweet.getPageSize());
-            Page<Tweet> pages = tweetMapper.queryTweets(tweet);
+            PageHelper.startPage(param.getPageNum(), param.getPageSize());
+            Page<Tweet> pages = tweetMapper.queryTweets(null);
             if (pages != null && !pages.getResult().isEmpty()) {
 
                 // 查询关联的图片/视频
                 List<String> tweetIds = pages.getResult().stream().map(Tweet::getId).toList();
-                Map<String, List<TweetPic>> tweetPicMap = tweetMapper.queryTweetPicByIds(tweetIds);
-                Map<String, List<TweetComment>> tweetCommentMap = tweetMapper.queryTweetCommentByIds(tweetIds);
+                List<TweetPic> tweetPicList = tweetMapper.queryTweetPicByIds(tweetIds);
+                List<TweetComment> tweetCommentList = tweetMapper.queryTweetCommentByIds(tweetIds);
+
+                Map<String, List<TweetPic>> tweetPicMap = tweetPicList.stream().collect(Collectors.groupingBy(TweetPic::getTweetId));
+                Map<String, List<TweetComment>> tweetCommentMap = tweetCommentList.stream().collect(Collectors.groupingBy(TweetComment::getTweetId));
 
                 // 整理数据
                 pages.getResult().forEach(item -> {
@@ -58,9 +65,27 @@ public class TweetController {
     }
 
     private void setPageParam(Result result, Page pages) {
-        result.setPages(pages.getPages());
-        result.setPageNum(pages.getPageNum());
-        result.setTotal(pages.getTotal());
-        result.setPageSize(pages.getPageSize());
+        PageParam param = new PageParam();
+        param.setPages(pages.getPages());
+        param.setPageNum(pages.getPageNum());
+        param.setTotal(pages.getTotal());
+        param.setPageSize(pages.getPageSize());
+        result.setPageParam(param);
     }
+
+    @PostMapping("/addNewTweet")
+    @Transactional(rollbackFor = Exception.class)
+    Result addNewTweet(Tweet tweet) {
+        try {
+            int flag = tweetMapper.insertNewTweet(tweet);
+            if ( flag > 0 ) {
+                tweetMapper.insertTweetPicList(tweet.getId(), tweet.getPicList());
+            }
+
+        } catch (Exception e) {
+
+        }
+        return null;
+    }
+
 }

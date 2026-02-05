@@ -8,5 +8,6 @@ public class TweetComment {
     private String tweetId;
     private String commentContent;
     private String commentPicPath;
+    private String commentAuthor;
     private String publishTime;
 }

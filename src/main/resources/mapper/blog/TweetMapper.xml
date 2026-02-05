@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="cn.qiujianhui.blog.mapper.ArticleMapper">
+<mapper namespace="cn.qiujianhui.blog.mapper.TweetMapper">
     <select id="init">
         CREATE TABLE blog_tweet (
             id bigint NOT NULL AUTO_INCREMENT,
@@ -26,6 +26,7 @@
             id bigint NOT NULL AUTO_INCREMENT,
             tweet_id varchar(20),
             content varchar(300),
+            author varchar(30),
             pic_path varchar(100),
             publish_time datetime,
             PRIMARY KEY (id)
@@ -63,6 +64,7 @@
         tweet_id as tweetId,
         content as commentContent,
         pic_path as commentPicPath,
+        author as commentAuthor,
         publish_time as publishTime
         from blog_tweet_comment
         where tweet_id in
@@ -70,5 +72,14 @@
             #{item}
         </foreach>
     </select>
+
+    <insert id="insertNewTweet" parameterType="cn.qiujianhui.blog.entity.tweet.Tweet" useGeneratedKeys="true" keyProperty="id">
+        insert into blog_tweet (content, author, publish_time, update_time)
+        values (#{content}, #{author}, now(), now())
+    </insert>
+
+    <insert id="insertTweetPicList">
+
+    </insert>
     
 </mapper>

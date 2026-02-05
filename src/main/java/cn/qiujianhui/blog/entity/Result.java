@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Data
-public class Result extends PageParam{
+public class Result {
     /**
      * 返回状态码
      */
@@ -23,6 +23,10 @@ public class Result extends PageParam{
      * 时间戳
      */
     private String timeStamp;
+    /**
+     * 分页参数
+     */
+    private PageParam pageParam;
 
     private static Result data(String code, String message, Object data) {
         Result result = new Result();
